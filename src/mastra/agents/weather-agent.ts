@@ -3,6 +3,7 @@ import { Agent } from '@mastra/core/agent';
 import { Memory } from '@mastra/memory';
 import { LibSQLStore } from '@mastra/libsql';
 import { weatherTool } from '../tools/weather-tool';
+import { createAnswerRelevancyScorer } from '@mastra/evals/scorers/llm';
 
 export const weatherAgent = new Agent({
   name: 'Weather Agent',
@@ -27,4 +28,11 @@ export const weatherAgent = new Agent({
       url: 'file:../mastra.db', // path is relative to the .mastra/output directory
     }),
   }),
+  scorers: {
+    answerRelevance: {
+      scorer: createAnswerRelevancyScorer({
+        model: openai('gpt-4o-mini'),
+      })
+    }
+  }
 });
