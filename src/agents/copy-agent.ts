@@ -1,7 +1,7 @@
 import { openai } from '@ai-sdk/openai';
 import { Agent } from '@mastra/core/agent';
 import { weatherTool } from '../tools/weather-tool';
-import { PromptAlignmentMetric } from '@mastra/evals/llm';
+import { AnswerRelevancyMetric, BiasMetric, PromptAlignmentMetric } from '@mastra/evals/llm';
 
 export const weatherAgent2 = new Agent({
   name: 'Weather Agent2',
@@ -22,6 +22,8 @@ export const weatherAgent2 = new Agent({
   model: openai('gpt-4o-mini'),
   tools: { weatherTool },
   evals: {
-    promptAlignment: new PromptAlignmentMetric(openai('gpt-4o-mini'), { instructions: ['You are a helpful weather assistant that provides accurate weather information and can help planning activities based on the weather.'] })
+    promptAlignment: new PromptAlignmentMetric(openai('gpt-4o-mini'), { instructions: ['You are a helpful weather assistant that provides accurate weather information and can help planning activities based on the weather.'] }),
+    answerRelevancy: new AnswerRelevancyMetric(openai('gpt-4o-mini')),
+    bias: new BiasMetric(openai('gpt-4o-mini')),
   }
 });
